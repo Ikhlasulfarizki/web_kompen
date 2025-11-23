@@ -30,6 +30,7 @@
             <th>Tugas</th>
             <th>Deskripsi</th>
             <th>Lokasi</th>
+            <th>Tanggal dan Waktu</th>
             <th>Jam Kompen</th>
             <th>Kuota</th>
             <th>Status</th>

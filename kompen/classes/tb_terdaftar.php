@@ -33,6 +33,17 @@ class Terdaftar{
             "data"=> $row
         ];
     }
+    
+    public function countTerdaftar($id_tugas){
+        $query = $this->conn->prepare("SELECT * FROM tb_mhs_terdaftar WHERE id_tugas = ?");
+        $query->bind_param("i", $id_tugas);
+        $query->execute();
+        $result = $query->get_result();
+        $count = $result->num_rows;
+        return [
+            "count"=> $count,
+        ];
+    }
 
 public function daftarKegiatan($id_user, $id_tugas){
     $row = $this->terdaftar($id_user, $id_tugas);

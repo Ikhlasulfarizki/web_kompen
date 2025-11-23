@@ -16,7 +16,7 @@
         $daftar = $terdaftar->daftarKegiatan($id_mhs, $id_tugas);
         echo "
         <script>
-            alert('" . $daftar['message'] . "'); location.href='dashboard.php';</script>";
+            alert('" . $daftar['message'] . "'); location.href='dashboard_mhs.php';</script>";
     }
 
     $mhs_terdaftar = $terdaftar->mhsTerdaftar($id_mhs);
@@ -62,14 +62,17 @@
         </div>
         <hr class="mb-4">
         <div class="row">
-            <?php foreach ($data_tugas as $row) { ?>
+            <?php foreach ($data_tugas as $row) { 
+                $count_terdaftar = $terdaftar->countTerdaftar($row["id"]);
+            ?>
                 <div class="col-md-3">
                     <div class="card rounded-card p-3" style="height: 300px;">
                         <div class="flex-grow-1">
                             <p class="mt-2">
                                 <?= $row["nama_tugas"] ?><br>
                                 <?= $row["deskripsi"] ?><br>
-                                <?= $row["lokasi"] ?>
+                                <?= $row["lokasi"] ?><br>
+                                <?= $count_terdaftar["count"] . "/" . $row["kuota"] ?>
                             </p>
                         </div>
                         <div class="d-flex justify-content-end">

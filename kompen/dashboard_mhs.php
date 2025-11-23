@@ -1,33 +1,31 @@
 <?php
-session_start();
+    session_start();
+    if (!isset($_SESSION["data"])) {
+        header("Location: login.php");
+        exit();
+    }
+    include "classes/databases.php";
+    include "classes/tb_tugas.php";
+    include "classes/tb_terdaftar.php";
+    $db = new Database();
+    $terdaftar = new Terdaftar($db);
+    $id_mhs = $_SESSION["data"]["id"];
 
-if (!isset($_SESSION["data"])) {
-    header("Location: login.php");
-    exit();
-}
+    if (isset($_POST['daftar'])) {
+        $id_tugas = $_POST['id_tugas'];
+        $daftar = $terdaftar->daftarKegiatan($id_mhs, $id_tugas);
+        echo "
+        <script>
+            alert('" . $daftar['message'] . "'); location.href='dashboard.php';</script>";
+    }
 
-include "classes/databases.php";
-include "classes/tb_tugas.php";
-include "classes/tb_terdaftar.php";
+    $mhs_terdaftar = $terdaftar->mhsTerdaftar($id_mhs);
+    $count_terdaftar = $mhs_terdaftar['count'];
 
-$db = new Database();
-$terdaftar = new Terdaftar($db);
-
-$id_mhs = $_SESSION["data"]["id"];
-
-if (isset($_POST['daftar'])) {
-    $id_tugas = $_POST['id_tugas'];
-    $daftar = $terdaftar->daftarKegiatan($id_mhs, $id_tugas);
-    echo "<script>alert('" . $daftar['message'] . "');</script>";
-}
-
-$mhs_terdaftar = $terdaftar->mhsTerdaftar($id_mhs);
-$count_terdaftar = $mhs_terdaftar['count'];
-
-$tugas = new Tugas($db, $terdaftar);
-$alltugas = $tugas->allTugas();
-$count_tugas = $alltugas['count'];
-$data_tugas = $alltugas['data'];
+    $tugas = new Tugas($db, $terdaftar);
+    $alltugas = $tugas->allTugas();
+    $count_tugas = $alltugas['count'];
+    $data_tugas = $alltugas['data'];
 ?>
 
 <!DOCTYPE html>

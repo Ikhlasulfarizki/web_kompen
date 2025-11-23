@@ -6,12 +6,24 @@ class Auth{
     }
 
     public function login($username, $password){
-        // $admin = $this->checkUser("tb_admin", "username", $username, $password);
-        // if($admin) return ["role" => "admin" , "data" => $admin];
         $dosen = $this->checkUser("tb_dosen", "nip", $username, $password);
-        if($dosen) return ["role" => "dosen" , "data" => $dosen];
+        if($dosen) {
+            return [
+                "role" => "dosen", 
+                "location" => "dashboard_dsn.php", 
+                "data" => $dosen,
+                "message" => "Login Berhasil, Selamat Datang " . $dosen['nama_dsn']
+             ];
+        }
         $mahasiswa = $this->checkUser("tb_mahasiswa", "npm", $username, $password);
-        if($mahasiswa) return ["role" => "mahasiswa" , "data" => $mahasiswa];
+        if($mahasiswa){
+            return [
+                "role" => "mahasiswa",
+                "location" => "dashboard_mhs.php",
+                "data" => $mahasiswa,
+                "message" => "Login Berhasil, Selamat Datang " . $mahasiswa['nama_mhs']
+            ];
+        } 
     }
 
     private function checkUser($table, $field, $username, $password){

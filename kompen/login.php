@@ -1,31 +1,36 @@
 <?php
-session_start();
-
-include 'classes/databases.php';
-include 'classes/auth.php';
-$db = new Database();
-$auth = new Auth($db);
-if (isset($_POST['login'])) {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $user = $auth->login($username, $password);
-    if ($user) {
-        $role = $user['role'];
-        $_SESSION['role'] = $role;
-        $_SESSION['data'] = $user['data'];
-        switch ($role) {
-            case 'dosen':
-                echo "<script>alert('Login Berhasil'); location.href='dashboard_dsn.php';</script>";
-                break;
-            case 'mahasiswa':
-                echo "<script>alert('Login Berhasil'); location.href='dashboard_mhs.php';</script>";
-                break;
+    session_start();
+        if (isset($_SESSION['location'])) {
+            echo "<script>alert('Anda Sudah Login'); location.href='" . $_SESSION["location"] . "';</script>";
+            exit();
         }
-        exit;
-    } else {
-        echo "<script>alert('Login Gagal');</script>";
+
+    include 'classes/databases.php';
+    include 'classes/auth.php';
+    $db = new Database();
+    $auth = new Auth($db);
+    if (isset($_POST['login'])) {
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $user = $auth->login($username, $password);
+        if ($user) {
+            $role = $user['role'];
+            $_SESSION['role'] = $role;
+            $_SESSION['data'] = $user['data'];
+            $_SESSION['location'] = $user['location'];
+            switch ($role) {
+                case 'dosen':
+                    echo "<script>alert('" . $user["message"] . "'); location.href='" . $user["location"] . "';</script>";
+                    break;
+                case 'mahasiswa':
+                    echo "<script>alert('" . $user["message"] . "'); location.href='" . $user["location"] . "';</script>";
+                    break;
+            }
+            exit;
+        } else {
+            echo "<script>alert('Login Gagal');</script>";
+        }
     }
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,11 +54,9 @@ if (isset($_POST['login'])) {
             }
         });
     </script>
-
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/azzara.min.css">
 </head>
-
 <body class="login">
     <div class="wrapper wrapper-login">
         <div class="container container-login animated fadeIn">
